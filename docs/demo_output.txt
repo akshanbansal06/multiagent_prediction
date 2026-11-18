@@ -1,0 +1,14 @@
+Loaded 4180 Premier League matches, 11 seasons (2015-16 to 2025-26)
+
+Held-out seasons (2019-20 to 2025-26), 2660 matches. Lower RPS is better.
+Forecaster                 RPS    Skill vs naive
+Naive (floor)           0.2336             0.0%
+Elo                     0.2033            13.0%
+Bookmaker (ceiling)     0.1982            15.2%
+
+Elo forecasts for the last 5 matches in the data:
+  Man City v Aston Villa: home 65% / draw 18% / away 16%  ->  actual: away win  (RPS 0.565)
+  Nott'm Forest v Bournemouth: home 33% / draw 24% / away 43%  ->  actual: draw  (RPS 0.146)
+  Sunderland v Chelsea: home 41% / draw 24% / away 35%  ->  actual: home win  (RPS 0.236)
+  Tottenham v Everton: home 33% / draw 24% / away 43%  ->  actual: home win  (RPS 0.320)
+  West Ham v Leeds: home 35% / draw 24% / away 40%  ->  actual: home win  (RPS 0.291)
