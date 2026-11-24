@@ -20,4 +20,6 @@ def run_trust(forecasts, outcomes, method):
         losses = np.full(k, INVALID_LOSS)
         losses[valid] = rps_batch(forecasts[t, valid], np.full(valid.sum(), outcomes[t]))
         method.update(losses)                            # learn only after the result
+        if hasattr(method, "observe"):
+            method.observe(forecasts[t], valid, outcomes[t])
     return combined, used
