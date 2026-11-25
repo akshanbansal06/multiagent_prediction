@@ -1,0 +1,92 @@
+=== Tests ===
+......................................                                   [100%]
+38 passed in 4.76s
+
+=== Agents vs bookmaker ===
+Tuning xi on 2015-16 to 2018-19 ...
+  xi=0.0005  train RPS 0.2036
+  xi=0.0015  train RPS 0.2030
+  xi=0.003   train RPS 0.2028
+Chosen xi = 0.003
+
+Held-out seasons (2019-20 to 2025-26). Lower RPS is better.
+Forecaster                 RPS    Skill vs naive
+Naive (floor)           0.2336             0.0%
+Elo                     0.2033            13.0%
+LogReg                  0.2164             7.4%
+Dixon-Coles             0.2027            13.2%
+Bookmaker (ceiling)     0.1982            15.2%
+
+Dixon-Coles full walk-forward run: 2.2s
+
+=== Fault damage ===
+Faults applied to the Elo agent. Held-out seasons, lower RPS is better.
+Agent                      RPS   Unusable rows
+Honest Elo              0.2033            0.0%
+Naive (floor)           0.2336            0.0%
+Elo + noisy             0.2203            0.0%
+Elo + biased            0.2188            0.0%
+Elo + flipped           0.3381            0.0%
+Elo + overconfident     0.2494            0.0%
+Elo + sleeper           0.3381            0.0%
+Elo + invalid           0.2041           10.4%
+
+=== Equal vs Hedge ===
+Faulty agent: elo. Held-out seasons, lower RPS is better.
+Best single honest agent (Dixon-Coles): 0.2027
+
+Fault            Equal RPS  Hedge RPS   Hedge weight on faulty
+none                0.2078     0.2033                    0.990
+noisy               0.2085     0.2027                    0.000
+biased              0.2088     0.2027                    0.000
+flipped             0.2219     0.2027                    0.000
+overconfident       0.2056     0.2027                    0.000
+sleeper             0.2174     0.2049                    0.379
+invalid             0.2080     0.2027                    0.000
+
+Total time: 3.4s
+
+=== Hedge tuning ===
+Simple average of Elo and Dixon-Coles (held-out): 0.2019
+
+Method         eta   gamma  Train RPS  Held RPS  Sleeper RPS   Delay
+hedge          0.1     1.0     0.2018    0.2021       0.2042     205
+hedge          0.3     1.0     0.2001    0.2026       0.2043      93
+hedge          1.0     1.0     0.1992    0.2033       0.2049      33
+hedge          3.0     1.0     0.1989    0.2033       0.2051      26
+discounted     0.3    0.99     0.2033    0.2053       0.2075      49
+discounted     0.3   0.995     0.2017    0.2037       0.2054      49
+discounted     0.3   0.999     0.2001    0.2020       0.2031      49
+discounted     1.0    0.99     0.2000    0.2030       0.2043      20
+discounted     1.0   0.995     0.1988    0.2021       0.2030      20
+discounted     1.0   0.999     0.1991    0.2022       0.2029      15
+discounted     3.0    0.99     0.1983    0.2023       0.2032       9
+discounted     3.0   0.995     0.1982    0.2020       0.2029       8
+discounted     3.0   0.999     0.1989    0.2027       0.2030       0
+
+Pick the row with the best Train RPS. Held and sleeper columns are for reporting only.
+
+=== Trust comparison ===
+Tuning Composite on 2015-16 to 2018-19 ...
+Chosen: eta=400, lam_cal=0.0, lam_shock=0.0 (train RPS 0.2012)
+
+Held-out RPS, lower is better. Best single honest agent: 0.2027
+Fault                  Equal        Hedge  Disc. Hedge    Composite    Comp. all
+none                  0.2078       0.2033       0.2020       0.2020       0.2029
+noisy                 0.2085       0.2027       0.2027       0.2026       0.2032
+biased                0.2088       0.2027       0.2028       0.2027       0.2033
+flipped               0.2219       0.2027       0.2027       0.2027       0.2033
+overconfident         0.2056       0.2027       0.2027       0.2027       0.2033
+sleeper               0.2174       0.2051       0.2029       0.2029       0.2037
+invalid               0.2080       0.2027       0.2027       0.2027       0.2033
+average               0.2111       0.2031       0.2027       0.2026       0.2033
+
+Method         Weight before   Delay   False alarm rate
+Equal                  0.200   never               0.0%
+Hedge                  1.000      26             100.0%
+Disc. Hedge            0.284       8              13.4%
+Composite              0.350       9               2.3%
+Comp. all              0.258       1              18.5%
+
+Delay: matches after the sleeper turns bad until its weight is below 5%.
+False alarm rate: share of held-out matches, with no faults, where Elo or Dixon-Coles gets under 5% weight.

@@ -40,7 +40,7 @@ SCENARIOS = ["none"] + list(FAULTS)
 print("Tuning Composite on 2015-16 to 2018-19 ...")
 train_sets = {s: scenario(s, SLEEP_TRAIN) for s in SCENARIOS}
 best, best_score = None, 9.0
-for eta, lc, ls in itertools.product((50, 100, 200, 400), (0.0, 1.0), (0.0, 2.0)):
+for eta, lc, ls in itertools.product((200, 400, 800, 1600), (0.0, 0.1, 0.3), (0.0, 0.5, 1.0)):
     score = np.mean([rps(run_trust(f, y, Composite(5, eta, lc, ls))[0], train) for f in train_sets.values()])
     if score < best_score:
         best, best_score = (eta, lc, ls), score
@@ -51,7 +51,7 @@ METHODS = {
     "Hedge": lambda: Hedge(5, eta=3.0),
     "Disc. Hedge": lambda: DiscountedHedge(5, eta=3.0, gamma=0.995),
     "Composite": lambda: Composite(5, *best),
-    "Comp. all": lambda: Composite(5, best[0], 1.0, 2.0),   # every signal switched on
+    "Comp. all": lambda: Composite(5, best[0], 0.1, 0.5),   # every signal switched on
 }
 
 # ---- 2. held-out RPS for every method and fault ----
